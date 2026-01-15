@@ -1,0 +1,8 @@
+.
+./docs
+./scripts
+./signatures
+./signatures/rules
+./src
+./src/core
+./src/detection

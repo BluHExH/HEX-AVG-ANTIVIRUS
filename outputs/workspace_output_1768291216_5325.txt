@@ -1,0 +1,14 @@
+./.github/RELEASE_TEMPLATE.md
+./.github/workflows/build.yml
+./.github/workflows/ci.yml
+./BUILD_QUICK_REFERENCE.md
+./BUILD_SYSTEM.md
+./BUILD_SYSTEM_SUMMARY.md
+./INSTALLATION.md
+./LEVEL2_INSTALLATION.md
+./build.py
+./build/build_config.py
+./build/linux/create_appimage.sh
+./build/linux/create_deb.sh
+./build/windows/installer.nsi
+./docs/INSTALLATION.md

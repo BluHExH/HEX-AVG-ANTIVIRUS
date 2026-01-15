@@ -1,0 +1,100 @@
+# HEX-AVG Antivirus
+## Professional Cross-Platform Antivirus for Cyber Security Learning & Defensive Security
+
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Python](https://img.shields.io/badge/python-3.11+-green.svg)
+![License](https://img.shields.io/badge/license-MIT-orange.svg)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey.svg)
+
+---
+
+## 🎯 What is HEX-AVG?
+
+**HEX-AVG** is a professional, CLI-first antivirus tool designed specifically for:
+- **Cyber security education** and learning
+- **Malware analysis laboratories**
+- **Defensive security operations**
+- **Kali Linux environments**
+- **Windows PowerShell environments**
+
+HEX-AVG provides a complete, production-ready antivirus solution with advanced detection capabilities including signature-based detection, heuristic analysis, YARA rules, and platform-specific binary analysis.
+
+---
+
+## ✨ Key Features
+
+### 🔍 Advanced Detection Capabilities
+- **Signature-Based Detection**: Fast hash matching against comprehensive virus database
+- **Heuristic Analysis**: Detect unknown threats through behavioral patterns and statistical analysis
+- **YARA Rules Integration**: Customizable pattern matching for advanced threat hunting
+- **Platform-Specific Analysis**: Deep PE (Windows) and ELF (Linux) binary inspection
+
+### ⚡ High Performance
+- **Multi-threaded Scanning**: Utilize all CPU cores for rapid system scans
+- **Intelligent Caching**: Speed up subsequent scans with smart caching
+- **Memory-Efficient**: Optimized for scanning millions of files
+- **Progress Tracking**: Real-time progress bar and statistics
+
+### 🛡️ Safe & Secure
+- **Non-Destructive**: Read-only operations by default
+- **Secure Quarantine**: Encrypted isolation of detected threats
+- **Audit Logging**: Complete operation logs for forensic analysis
+- **Dry-Run Mode**: Test operations without making changes
+
+### 📊 Comprehensive Reporting
+- **Multiple Formats**: JSON, TXT, HTML, and CSV reports
+- **Detailed Statistics**: Scan duration, files scanned, threats found
+- **Export Capabilities**: Share reports and logs easily
+
+### 🎨 Professional CLI
+- **User-Friendly**: Intuitive command structure with helpful output
+- **Colored Output**: Color-coded results for easy interpretation
+- **Rich Progress Bars**: Visual feedback during scans
+- **Cross-Platform**: Works seamlessly on Linux and Windows
+
+---
+
+## 🖥️ Supported Platforms
+
+### ✅ Kali Linux
+- Full support with YARA rules integration
+- ELF binary analysis
+- Permission-aware scanning
+- Bash automation scripts
+
+### ✅ Windows
+- Native PowerShell support
+- PE file inspection
+- Registry and startup detection
+- PowerShell script analysis
+
+---
+
+## 📦 Installation
+
+### 🐧 Installing on Kali Linux
+
+#### Prerequisites:
+```bash
+# Update your system
+sudo apt update && sudo apt upgrade -y
+
+# Install Python 3.11+ if not already installed
+sudo apt install -y python3 python3-pip python3-venv python3-dev
+
+# Install security analysis tools
+sudo apt install -y yara clamav binutils gdb
+```
+
+#### Installation Steps:
+
+1. **Clone or Download HEX-AVG**:
+```bash
+cd ~
+git clone https://github.com/yourusername/hex-avg.git
+cd hex-avg
+```
+
+2. **Create Virtual Environment**:
+```bash
+python3 -m venv venv

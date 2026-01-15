@@ -1,0 +1,5 @@
+-rw-r--r-- 1 root root 10493 Jan 13 07:57 /workspace/build.py
+-rw-r--r-- 1 root root  7423 Jan 12 10:35 /workspace/config.py
+-rw-r--r-- 1 root root 14507 Jan 12 11:16 /workspace/hex_avg.py
+-rw-r--r-- 1 root root 17845 Jan 13 06:56 /workspace/hex_avg_level2.py
+-rw-r--r-- 1 root root 12242 Jan 14 08:17 /workspace/hex_avg_v3.py

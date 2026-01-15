@@ -1,0 +1,78 @@
+## 📦 Installation
+
+### 🐧 Installing on Kali Linux
+
+#### Prerequisites:
+```bash
+# Update your system
+sudo apt update && sudo apt upgrade -y
+
+# Install Python 3.11+ if not already installed
+sudo apt install -y python3 python3-pip python3-venv python3-dev
+
+# Install security analysis tools
+sudo apt install -y yara clamav binutils gdb
+```
+
+#### Installation Steps:
+
+1. **Clone or Download HEX-AVG**:
+```bash
+cd ~
+git clone https://github.com/yourusername/hex-avg.git
+cd hex-avg
+```
+
+2. **Create Virtual Environment**:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3. **Install Dependencies**:
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+4. **Initialize HEX-AVG**:
+```bash
+python hex_avg.py setup --init
+```
+
+5. **Verify Installation**:
+```bash
+python hex_avg.py --version
+```
+
+6. **(Optional) Install System-Wide**:
+```bash
+sudo ln -s $(pwd)/hex_avg.py /usr/local/bin/hex-avg
+sudo chmod +x /usr/local/bin/hex-avg
+```
+
+### 🪟 Installing on Windows
+
+#### Prerequisites:
+- **Windows 10/11** with PowerShell 5.1+
+- **Python 3.11+** (Download from python.org)
+
+#### Installation Steps:
+
+1. **Download HEX-AVG**:
+```powershell
+# Download and extract HEX-AVG to C:\hex-avg
+# Or clone using Git (if installed)
+git clone https://github.com/yourusername/hex-avg.git C:\hex-avg
+cd C:\hex-avg
+```
+
+2. **Create Virtual Environment**:
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
+
+3. **Install Dependencies**:
+```powershell
+pip install --upgrade pip

@@ -1,0 +1,2 @@
+/workspace/build/windows/hex_avg.spec
+/workspace/build/linux/hex_avg.spec

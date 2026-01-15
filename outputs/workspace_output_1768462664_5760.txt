@@ -1,0 +1,135 @@
+name: Build - Create Installable Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows Package
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller==5.13.0
+        pip install -r requirements.txt
+    
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller build/windows/hex_avg.spec --clean --noconfirm
+    
+    - name: Create ZIP package
+      run: |
+        Compress-Archive -Path dist/hex-avg-windows -DestinationPath hex-avg-windows-portable.zip
+      shell: pwsh
+    
+    - name: Upload Windows artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: hex-avg-windows
+        path: |
+          dist/hex-avg-windows/
+          hex-avg-windows-portable.zip
+
+  build-linux:
+    name: Build Linux Package
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          python3-dev \
+          libyara-dev \
+          patchelf \
+          desktop-file-utils \
+          shared-mime-info
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller==5.13.0
+        pip install -r requirements.txt
+    
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller build/linux/hex_avg.spec --clean --noconfirm
+    
+    - name: Create Debian package
+      run: |
+        chmod +x build/linux/create_deb.sh
+        build/linux/create_deb.sh
+    
+    - name: Create AppImage
+      run: |
+        chmod +x build/linux/create_appimage.sh
+        build/linux/create_appimage.sh
+    
+    - name: Upload Linux artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: hex-avg-linux
+        path: |
+          dist/hex-avg-linux/
+          build/linux/*.deb
+          build/linux/*.AppImage
+
+  release:
+    name: Create GitHub Release
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: artifacts
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          artifacts/hex-avg-windows/hex-avg-windows-portable.zip
+          artifacts/hex-avg-linux/*.deb
+          artifacts/hex-avg-linux/*.AppImage
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

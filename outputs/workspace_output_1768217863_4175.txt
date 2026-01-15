@@ -1,0 +1,35 @@
+.
+├── GETTING_STARTED.md
+├── HEX-AVG_ROADMAP.md
+├── PROJECT_SUMMARY.md
+├── README.md
+├── config.py
+├── docs
+│   ├── INSTALLATION.md
+│   └── USAGE.md
+├── hex_avg.py
+├── requirements.txt
+├── scripts
+│   ├── install_linux.sh
+│   └── install_windows.ps1
+├── signatures
+│   ├── eicar.json
+│   └── rules
+│       ├── malware.yar
+│       └── suspicious.yar
+├── src
+│   ├── __init__.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── file_traversal.py
+│   │   ├── hasher.py
+│   │   ├── multithreading.py
+│   │   └── scanner.py
+│   └── detection
+│       ├── __init__.py
+│       ├── heuristic.py
+│       ├── signature.py
+│       └── yara_engine.py
+└── todo.md
+
+8 directories, 25 files

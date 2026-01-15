@@ -1,0 +1,21 @@
+.github
+├── RELEASE_TEMPLATE.md
+└── workflows
+    ├── build.yml
+    └── ci.yml
+build
+├── build_config.py
+├── linux
+│   ├── create_appimage.sh
+│   ├── create_deb.sh
+│   └── hex_avg.spec
+└── windows
+    ├── hex_avg.spec
+    └── installer.nsi
+build.py  [error opening dir]
+BUILD_QUICK_REFERENCE.md  [error opening dir]
+BUILD_SYSTEM.md  [error opening dir]
+BUILD_SYSTEM_SUMMARY.md  [error opening dir]
+INSTALLATION.md  [error opening dir]
+
+5 directories, 14 files

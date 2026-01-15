@@ -1,0 +1,122 @@
+/workspace
+├── build
+│   ├── linux
+│   │   ├── create_appimage.sh
+│   │   ├── create_deb.sh
+│   │   └── hex_avg.spec
+│   ├── windows
+│   │   ├── hex_avg.spec
+│   │   └── installer.nsi
+│   └── build_config.py
+├── docs
+│   ├── INSTALLATION.md
+│   └── USAGE.md
+├── models
+├── outputs
+│   ├── workspace_output_1768217843_2875.txt
+│   ├── workspace_output_1768217848_8100.txt
+│   ├── workspace_output_1768217852_1330.txt
+│   ├── workspace_output_1768217863_4175.txt
+│   ├── workspace_output_1768290572_4221.txt
+│   ├── workspace_output_1768290575_5045.txt
+│   ├── workspace_output_1768290578_2991.txt
+│   ├── workspace_output_1768290580_7388.txt
+│   ├── workspace_output_1768290584_9054.txt
+│   ├── workspace_output_1768290629_5249.txt
+│   ├── workspace_output_1768290877_7319.txt
+│   ├── workspace_output_1768290882_9352.txt
+│   ├── workspace_output_1768290887_9586.txt
+│   ├── workspace_output_1768291216_5325.txt
+│   ├── workspace_output_1768291219_6256.txt
+│   ├── workspace_output_1768291301_2733.txt
+│   ├── workspace_output_1768378624_4908.txt
+│   ├── workspace_output_1768379987_837.txt
+│   ├── workspace_output_1768462641_6227.txt
+│   ├── workspace_output_1768462642_8309.txt
+│   ├── workspace_output_1768462645_2229.txt
+│   ├── workspace_output_1768462659_8073.txt
+│   ├── workspace_output_1768462662_9658.txt
+│   ├── workspace_output_1768462664_5760.txt
+│   ├── workspace_output_1768462668_9239.txt
+│   ├── workspace_output_1768462670_9716.txt
+│   ├── workspace_output_1768462673_6908.txt
+│   ├── workspace_output_1768463593_2866.txt
+│   ├── workspace_output_1768463598_7982.txt
+│   └── workspace_output_1768464006_9751.txt
+├── scripts
+│   ├── install_linux.sh
+│   └── install_windows.ps1
+├── signatures
+│   ├── rules
+│   │   ├── malware.yar
+│   │   └── suspicious.yar
+│   └── eicar.json
+├── src
+│   ├── cloud
+│   │   ├── __init__.py
+│   │   └── cloud_sync.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── file_traversal.py
+│   │   ├── hasher.py
+│   │   ├── multithreading.py
+│   │   └── scanner.py
+│   ├── detection
+│   │   ├── __init__.py
+│   │   ├── advanced_heuristic.py
+│   │   ├── heuristic.py
+│   │   ├── ml_scoring.py
+│   │   ├── persistence.py
+│   │   ├── signature.py
+│   │   └── yara_engine.py
+│   ├── gui
+│   │   ├── __init__.py
+│   │   └── main_window.py
+│   ├── monitoring
+│   │   ├── __init__.py
+│   │   └── windows_monitor.py
+│   ├── scheduler
+│   │   ├── __init__.py
+│   │   └── scan_scheduler.py
+│   ├── services
+│   │   ├── __init__.py
+│   │   └── windows_service.py
+│   ├── update
+│   │   ├── __init__.py
+│   │   └── update_manager.py
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── defender_integration.py
+│   └── main.py
+├── summarized_conversations
+│   ├── original_conversation_1768290554_7324.txt
+│   └── original_conversation_1768462618_2999.txt
+├── BUILD_QUICK_REFERENCE.md
+├── BUILD_SYSTEM.md
+├── BUILD_SYSTEM_DELIVERY.md
+├── BUILD_SYSTEM_FIX.md
+├── BUILD_SYSTEM_SUMMARY.md
+├── DELIVERY_SUMMARY.md
+├── FIX_SUMMARY.md
+├── GETTING_STARTED.md
+├── HEX-AVG_ROADMAP.md
+├── HEX_AVG_V3_SUMMARY.md
+├── INSTALLATION.md
+├── LEVEL2_ARCHITECTURE.md
+├── LEVEL2_INSTALLATION.md
+├── LEVEL2_SECURITY.md
+├── PROJECT_STRUCTURE_FINAL.md
+├── PROJECT_SUMMARY.md
+├── README.md
+├── RELEASE_GUIDE.md
+├── build.py
+├── config.py
+├── hex_avg.py
+├── hex_avg.spec
+├── hex_avg_level2.py
+├── hex_avg_v3.py
+├── project_tree.txt
+├── requirements.txt
+└── todo.md
+
+20 directories, 100 files
