@@ -10,12 +10,12 @@ class HEXAVGConfig:
     """Main configuration class for HEX-AVG"""
     
     # Version Information
-    VERSION = "1.0.0"
-    VERSION_NAME = "Phoenix"
+    VERSION = "3.0.1"
+    VERSION_NAME = "Phoenix Rising"
     
     # Application Information
     APP_NAME = "HEX-AVG"
-    APP_DESCRIPTION = "Professional Cross-Platform Antivirus for Cyber Security"
+    APP_DESCRIPTION = "Educational Cross-Platform Antivirus for Cyber Security Learning"
     
     # Base Directory Configuration
     BASE_DIR = Path(__file__).parent.absolute()
@@ -93,7 +93,7 @@ class HEXAVGConfig:
     DEFAULT_REPORT_FORMAT = "json"
     
     # Update Configuration
-    SIGNATURE_UPDATE_URL = "https://api.hex-avg.org/signatures/latest"
+    SIGNATURE_UPDATE_URL = ""  # Optional; offline by default
     UPDATE_CHECK_INTERVAL = 24  # hours
     AUTO_UPDATE_ENABLED = False
     
@@ -145,14 +145,11 @@ class HEXAVGConfig:
     @classmethod
     def initialize(cls) -> None:
         """Initialize configuration and create necessary directories"""
-        # Create directories
         cls.SIGNATURES_DIR.mkdir(parents=True, exist_ok=True)
         cls.QUARANTINE_DIR.mkdir(parents=True, exist_ok=True)
         cls.LOGS_DIR.mkdir(parents=True, exist_ok=True)
         cls.REPORTS_DIR.mkdir(parents=True, exist_ok=True)
         cls.YARA_RULES_DIR.mkdir(parents=True, exist_ok=True)
-        
-        # Create cache directory if caching is enabled
         if cls.ENABLE_CACHING:
             cls.CACHE_DIR.mkdir(parents=True, exist_ok=True)
     
