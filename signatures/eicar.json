@@ -7,14 +7,11 @@
       "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
       "type": "test",
       "severity": "info",
-      "description": "EICAR Standard Antivirus Test File - Safe for testing",
-      "detected": true
+      "description": "EICAR Standard Antivirus Test File - Safe for testing"
     }
   ],
   "metadata": {
     "version": "1.0.0",
-    "created": "2024-01-01T00:00:00Z",
-    "updated": "2024-01-01T00:00:00Z",
     "signatures_count": 1
   }
 }
