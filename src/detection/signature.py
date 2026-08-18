@@ -28,8 +28,8 @@ class SignatureDetector:
             # Create database directory if it doesn't exist
             self.signature_db.parent.mkdir(parents=True, exist_ok=True)
             
-            # Connect to database
-            self.connection = sqlite3.connect(str(self.signature_db))
+            # Connect to database (check_same_thread=False for multi-threaded scans)
+            self.connection = sqlite3.connect(str(self.signature_db), check_same_thread=False)
             cursor = self.connection.cursor()
             
             # Create signatures table
@@ -95,21 +95,7 @@ class SignatureDetector:
         severity: str = "medium",
         description: str = ""
     ) -> bool:
-        """
-        Add a signature to the database
-        
-        Args:
-            name: Signature name
-            md5: MD5 hash
-            sha1: SHA1 hash
-            sha256: SHA256 hash
-            sig_type: Type of signature
-            severity: Severity level
-            description: Description
-        
-        Returns:
-            True if successful, False otherwise
-        """
+        """Add a signature to the database"""
         try:
             cursor = self.connection.cursor()
             cursor.execute('''
@@ -129,16 +115,7 @@ class SignatureDetector:
         file_path: Path,
         hashes: Dict[str, str]
     ) -> Dict[str, Any]:
-        """
-        Detect malware by matching hashes against signatures
-        
-        Args:
-            file_path: Path to the file
-            hashes: Dictionary of hashes (md5, sha1, sha256)
-        
-        Returns:
-            Detection result dictionary
-        """
+        """Detect malware by matching hashes against signatures"""
         result = {
             'detected': False,
             'name': None,
@@ -150,12 +127,10 @@ class SignatureDetector:
         try:
             cursor = self.connection.cursor()
             
-            # Check each hash algorithm
             for algo, hash_value in hashes.items():
                 if not hash_value:
                     continue
                 
-                # Query database for matching signature
                 cursor.execute(f'''
                     SELECT name, severity, type, description
                     FROM signatures
@@ -183,21 +158,12 @@ class SignatureDetector:
         try:
             cursor = self.connection.cursor()
             cursor.execute('SELECT COUNT(*) FROM signatures')
-            count = cursor.fetchone()[0]
-            return count
+            return cursor.fetchone()[0]
         except Exception:
             return 0
     
     def list_signatures(self, limit: int = 100) -> List[Dict[str, Any]]:
-        """
-        List signatures in the database
-        
-        Args:
-            limit: Maximum number of signatures to return
-        
-        Returns:
-            List of signature dictionaries
-        """
+        """List signatures in the database"""
         try:
             cursor = self.connection.cursor()
             cursor.execute('''
@@ -218,53 +184,31 @@ class SignatureDetector:
                     'description': row[5],
                     'created_at': row[6]
                 })
-            
             return signatures
-        
         except Exception as e:
             print(f"Error listing signatures: {str(e)}")
             return []
     
     def export_signatures(self, output_file: Path) -> bool:
-        """
-        Export signatures to JSON file
-        
-        Args:
-            output_file: Path to output JSON file
-        
-        Returns:
-            True if successful, False otherwise
-        """
+        """Export signatures to JSON file"""
         try:
-            signatures = self.list_signatures(limit=None)
-            
+            signatures = self.list_signatures(limit=10000)
             with open(output_file, 'w') as f:
                 json.dump({
                     'signatures': signatures,
                     'count': len(signatures),
                     'exported_at': str(HEXAVGConfig.VERSION)
                 }, f, indent=2)
-            
             return True
-        
         except Exception as e:
             print(f"Error exporting signatures: {str(e)}")
             return False
     
     def import_signatures(self, input_file: Path) -> bool:
-        """
-        Import signatures from JSON file
-        
-        Args:
-            input_file: Path to input JSON file
-        
-        Returns:
-            True if successful, False otherwise
-        """
+        """Import signatures from JSON file"""
         try:
             with open(input_file, 'r') as f:
                 data = json.load(f)
-            
             count = 0
             for sig in data.get('signatures', []):
                 if self.add_signature(
@@ -277,10 +221,8 @@ class SignatureDetector:
                     description=sig.get('description', '')
                 ):
                     count += 1
-            
             print(f"Imported {count} signatures")
             return True
-        
         except Exception as e:
             print(f"Error importing signatures: {str(e)}")
             return False
