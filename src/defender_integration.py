@@ -4,7 +4,7 @@ Detects Defender status and shows friendly coexistence notice
 """
 
 import platform
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 import subprocess
 
 
@@ -28,265 +28,84 @@ class DefenderIntegrator:
 ╠════════════════════════════════════════════════════════════════╣
 ║                                                                ║
 ║  HEX-AVG is designed to WORK ALONGSIDE Windows Defender,     ║
-║  not replace it.                                               ║
+║  not replace it. Multi-layered security is best practice.     ║
 ║                                                                ║
-║  🛡️  MULTI-LAYERED SECURITY APPROACH:                        ║
-║                                                                ║
-║  Layer 1: Windows Defender                                    ║
-║  • Real-time protection                                        ║
-║  • Cloud-delivered protection                                 ║
-║  • Automatic sample submission                                ║
-║  • Microsoft's threat intelligence                            ║
-║                                                                ║
-║  Layer 2: HEX-AVG (Educational/Analysis)                     ║
-║  • Signature-based detection                                   ║
-║  • Advanced heuristic analysis                                 ║
-║  • YARA rule matching                                          ║
-║  • Malware analysis capabilities                               ║
-║                                                                ║
-║  ✅ BOTH TOOLS CAN RUN TOGETHER SAFELY                        ║
-║                                                                ║
-║  Benefits of coexistence:                                      ║
-║  • Complementary detection methods                             ║
-║  • Defense-in-depth strategy                                   ║
-║  • Educational insight into different AV engines              ║
-║  • Reduced chance of detection bypass                          ║
-║                                                                ║
-║  ⚠️  IMPORTANT:                                               ║
-║  • HEX-AVG will NOT disable Windows Defender                  ║
-║  • Both tools will scan independently                          ║
-║  • Slight performance impact is expected (normal)             ║
-║  • This is a feature, not a bug                               ║
-║                                                                ║
-║  📚 Learn more:                                                ║
-║  • Multi-layered security: defense-in-depth                    ║
-║  • Why multiple AV tools matter                                ║
-║  • Educational cybersecurity                                   ║
+║  HEX-AVG does NOT disable, weaken, or modify Defender.        ║
+║  This notice is informational only.                           ║
 ║                                                                ║
 ╚════════════════════════════════════════════════════════════════╝
 """
     
     def check_defender_status(self) -> Dict:
-        """
-        Check Windows Defender status
-        
-        Returns:
-            Dict with Defender status information
-        """
+        """Check Windows Defender status (Windows only)."""
         if not self.is_windows:
             return {
-                'enabled': False,
-                'status': 'not_applicable',
-                'message': 'Windows Defender is only available on Windows',
-                'platform': platform.system()
+                'available': False,
+                'reason': 'Not running on Windows',
+                'status': 'n/a'
             }
-        
         try:
-            # Check if Windows Defender is enabled
-            # Using PowerShell to query Defender status
+            # Informational only — read status, never change settings
             result = subprocess.run(
-                ['powershell', '-Command',
-                 'Get-MpComputerStatus | Select-Object AntivirusEnabled, '
-                 'RealTimeProtectionEnabled, IoavProtectionEnabled | ConvertTo-Json'],
-                capture_output=True,
-                text=True,
-                timeout=10
+                ['powershell', '-NoProfile', '-Command',
+                 'Get-MpComputerStatus | Select-Object -Property AMServiceEnabled,AntispywareEnabled,AntivirusEnabled | ConvertTo-Json'],
+                capture_output=True, text=True, timeout=10
             )
-            
-            if result.returncode == 0 and result.stdout:
-                import json
-                status = json.loads(result.stdout)
-                
-                is_enabled = status.get('AntivirusEnabled', False) or \
-                            status.get('RealTimeProtectionEnabled', False) or \
-                            status.get('IoavProtectionEnabled', False)
-                
-                self.defender_status = {
-                    'enabled': is_enabled,
-                    'status': 'enabled' if is_enabled else 'disabled',
-                    'real_time_enabled': status.get('RealTimeProtectionEnabled', False),
-                    'ioav_enabled': status.get('IoavProtectionEnabled', False),
-                    'message': 'Windows Defender is active' if is_enabled else 'Windows Defender is disabled'
+            if result.returncode == 0 and result.stdout.strip():
+                return {
+                    'available': True,
+                    'status': 'detected',
+                    'raw': result.stdout.strip()[:500]
                 }
-            else:
-                self.defender_status = {
-                    'enabled': True,  # Assume enabled if we can't check
-                    'status': 'unknown',
-                    'message': 'Could not determine Windows Defender status (assuming enabled)'
-                }
-        
-        except (subprocess.TimeoutExpired, json.JSONDecodeError, Exception) as e:
-            # If we can't check, assume Defender is enabled (safe default)
-            self.defender_status = {
-                'enabled': True,
-                'status': 'unknown',
-                'message': f'Could not determine Windows Defender status: {str(e)}'
-            }
-        
-        return self.defender_status
+            return {'available': True, 'status': 'unknown', 'reason': 'Could not query status'}
+        except Exception as e:
+            return {'available': False, 'status': 'error', 'reason': str(e)}
     
-    def show_coexistence_notice(self):
-        """
-        Show coexistence notice to user
-        
-        This is only shown once per session and provides education
-        about multi-layered security.
-        """
+    def show_coexistence_notice(self) -> None:
+        """Print coexistence notice once (Windows only)."""
         if not self.is_windows:
             return
-        
-        status = self.check_defender_status()
-        
-        print("="*64)
-        print("🛡️  WINDOWS DEFENDER INTEGRATION")
-        print("="*64)
-        print(f"\nStatus: {status['message']}\n")
         print(self.coexistence_message)
-        print("\n" + "="*64)
-        print("✅ HEX-AVG will now run alongside Windows Defender")
-        print("="*64 + "\n")
     
     def get_coexistence_info(self) -> Dict:
-        """
-        Get coexistence information
-        
-        Returns:
-            Dict with coexistence details
-        """
+        """Return structured coexistence information."""
         status = self.check_defender_status()
-        
         return {
-            'defender_enabled': status.get('enabled', False),
-            'defender_status': status.get('status', 'unknown'),
-            'coexistence_mode': 'enabled',
-            'philosophy': 'defense_in_depth',
+            'defender_status': status.get('status', 'n/a'),
+            'coexistence_mode': 'informational',
+            'philosophy': 'HEX-AVG never disables or modifies Windows Defender',
             'benefits': [
-                'Complementary detection methods',
-                'Multi-layered security approach',
-                'Educational cybersecurity learning',
-                'Reduced detection bypass risk'
+                'Multi-layered detection approaches',
+                'Educational signature/heuristic scanning',
+                'No interference with system AV settings'
             ],
-            'important_notes': [
-                'HEX-AVG never disables Windows Defender',
-                'Both tools scan independently',
-                'Slight performance impact is expected and normal',
-                'This is a security feature, not a bug'
-            ],
-            'performance_impact': 'moderate',
-            'recommended_usage': 'run_both'
+            'raw_status': status
         }
-    
-    def is_defender_interfering(self) -> bool:
-        """
-        Check if Windows Defender is interfering with HEX-AVG
-        
-        Returns:
-            True if interference detected, False otherwise
-        """
-        if not self.is_windows:
-            return False
-        
-        # Check if HEX-AVG files are being quarantined by Defender
-        try:
-            result = subprocess.run(
-                ['powershell', '-Command',
-                 'Get-MpThreatDetection | Where-Object { $_.ThreatName -like "*HEX-AVG*" } | '
-                 'Select-Object ThreatName, ActionSuccess | ConvertTo-Json'],
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            
-            if result.returncode == 0 and result.stdout:
-                import json
-                detections = json.loads(result.stdout)
-                if detections and isinstance(detections, list) and len(detections) > 0:
-                    return True
-            
-        except:
-            pass
-        
-        return False
     
     def suggest_exclusions(self) -> Optional[List[str]]:
         """
-        Suggest Windows Defender exclusions for HEX-AVG
-        
-        Returns:
-            List of paths to exclude, or None if not needed
+        Suggest optional exclusion paths for advanced users.
+        Returns None by default — HEX-AVG does not require exclusions.
         """
-        if not self.is_windows or not self.is_defender_interfering():
-            return None
-        
-        import os
-        
-        hex_avg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        
-        return [
-            hex_avg_dir,
-            os.path.join(hex_avg_dir, 'quarantine'),
-            os.path.join(hex_avg_dir, 'signatures'),
-            os.path.join(hex_avg_dir, 'logs')
-        ]
+        return None
     
     def get_exclusion_instructions(self, paths: List[str]) -> str:
-        """
-        Get instructions for adding Windows Defender exclusions
-        
-        Args:
-            paths: List of paths to exclude
-            
-        Returns:
-            Formatted instructions
-        """
-        instructions = """
-╔════════════════════════════════════════════════════════════════╗
-║     WINDOWS DEFENDER EXCLUSION INSTRUCTIONS                    ║
-╠════════════════════════════════════════════════════════════════╣
-║                                                                ║
-║  If Windows Defender is interfering with HEX-AVG, you can     ║
-║  add exclusions to allow HEX-AVG to run normally.             ║
-║                                                                ║
-║  ⚠️  EXCLUSIONS ARE OPTIONAL - HEX-AVG WILL WORK WITHOUT THEM ║
-║                                                                ║
-║  To add exclusions via PowerShell (run as Administrator):     ║
-║                                                                ║
-"""
-        
-        for path in paths:
-            instructions += f'  Add-MpPreference -ExclusionPath "{path}"\n'
-        
-        instructions += """
-║                                                                ║
-║  To add exclusions via Windows Security app:                 ║
-║  1. Open Windows Security                                     ║
-║  2. Go to Virus & threat protection                           ║
-║  3. Click "Manage settings"                                   ║
-║  4. Scroll to "Exclusions"                                    ║
-║  5. Click "Add or remove exclusions"                          ║
-║  6. Add the paths listed above                                ║
-║                                                                ║
-║  To remove exclusions later:                                 ║
-║  Remove-MpPreference -ExclusionPath "<path>"                 ║
-║                                                                ║
-║  📚 Learn more:                                                ║
-║  https://docs.microsoft.com/en-us/windows/security/           ║
-║  threat-protection/microsoft-defender-antivirus/               ║
-║  configure-exclusions-microsoft-defender-antivirus            ║
-║                                                                ║
-╚════════════════════════════════════════════════════════════════╝
-"""
-        
-        return instructions
+        """Return human-readable exclusion instructions (informational)."""
+        if not paths:
+            return "No exclusions suggested. HEX-AVG is designed to coexist without them."
+        lines = ["Optional exclusion paths (manual, user-controlled):"]
+        for p in paths:
+            lines.append(f"  - {p}")
+        lines.append("Only add exclusions if you fully understand the security implications.")
+        return "\n".join(lines)
 
 
-# Create global instance
-_defender_integrator = None
+_defender_instance = None
 
 
 def get_defender_integrator() -> DefenderIntegrator:
-    """Get global defender integrator instance"""
-    global _defender_integrator
-    if _defender_integrator is None:
-        _defender_integrator = DefenderIntegrator()
-    return _defender_integrator
+    """Get singleton DefenderIntegrator instance."""
+    global _defender_instance
+    if _defender_instance is None:
+        _defender_instance = DefenderIntegrator()
+    return _defender_instance
