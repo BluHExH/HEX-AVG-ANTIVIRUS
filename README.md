@@ -1,259 +1,97 @@
-# 🛡️ HEX-AVG Antivirus v3.0.0
+# HEX-AVG Antivirus v3.0.1
 
-## Professional Cross-Platform Antivirus for Cyber Security Learning &amp; Defensive Security
+**Educational / experimental defensive antivirus** written in Python.
 
-![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)
-![Python](https://img.shields.io/badge/python-3.11+-green.svg)
-![License](https://img.shields.io/badge/license-MIT-orange.svg)
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey.svg)
+This is **not** a production or commercial antivirus product. It is intended for:
 
----
+- Cybersecurity education
+- Learning how signature and heuristic scanners work
+- Lab environments and defensive tooling experiments
 
-## 🎯 What is HEX-AVG?
+## Features (honest status)
 
-**HEX-AVG** is a professional, open-source antivirus tool designed specifically for:
-- **Cyber security education** and learning
-- **Malware analysis laboratories**  
-- **Defensive security operations**
-- **Kali Linux environments**
-- **Windows PowerShell environments**
+| Feature | Status |
+|---------|--------|
+| Signature scanning (hash DB + EICAR) | Working |
+| Basic heuristics (entropy, extensions) | Working |
+| CLI (`scan`, `version`, `update`, …) | Working |
+| Multi-threaded file scan | Working |
+| YARA rules | Optional (graceful if unavailable) |
+| ML scoring | Experimental scaffold |
+| Cloud hash lookup | Optional / offline-safe |
+| GUI (Tkinter) | Experimental |
+| Windows Defender coexistence | Informational only (never disables Defender) |
+| Real-time protection | Not implemented |
+| Kernel / memory scanning | Not supported |
 
-HEX-AVG v3.0.0 introduces powerful Level-2+ features including advanced heuristic detection, auto-updates, ML-based scoring, cloud signature sync, and a user-friendly GUI.
+## Requirements
 
----
+- Python 3.11+
+- See `requirements.txt`
 
-## ✨ Key Features
+Optional: `yara-python` (may fail to install on some platforms; scanner continues without it).
 
-### 🔍 Advanced Detection Capabilities
-
-#### 1. **Signature-Based Detection** ✅
-- Fast hash matching against comprehensive virus database
-- EICAR test file support
-- Regular signature updates via GitHub Releases
-- SQLite database for efficient lookups
-
-#### 2. **Advanced Heuristic Engine** 🆕
-- **File Entropy Analysis**: Detects packed/encrypted files (entropy >7.0)
-- **File Type vs Extension Mismatch**: Identifies malware disguises
-- **Suspicious String Detection**: Finds malicious API calls and patterns
-- **Packed/Obfuscated File Detection**: Identifies known packers (UPX, Themida, VMProtect)
-- **Combined Scoring System**: All signals combined into 0-100 risk score
-
-**Why This Works:**
-- High entropy indicates packed/encrypted content common in malware
-- Extension mismatches are a common malware disguise technique
-- Suspicious API calls (VirtualAlloc, WriteProcessMemory) indicate malicious behavior
-- Packers hide malware from signature detection
-
-#### 3. **YARA Rules Integration** ✅
-- Customizable pattern matching for advanced threat hunting
-- Pre-built YARA rules for common malware families
-- Linux support with libyara
-
-#### 4. **ML-Based Threat Scoring** (Experimental) 🆕
-- Offline ML model for malware classification
-- Combines with heuristic scores for better accuracy
-- **Experimental**: Clearly labeled as such
-- Feature-weighted ensemble model
-- Privacy-focused: No cloud data required
-
-**Important:** ML scoring is experimental and trained on limited synthetic data. Use alongside signature and heuristic detection.
-
-#### 5. **Cloud Signature Sync** (Optional/Opt-In) 🆕
-- Hash-only cloud queries
-- **No file uploads** - only hashes sent to cloud
-- Offline fallback always available
-- User must explicitly opt-in
-- Privacy-first design with clear explanations
-
-**Privacy Guarantee:**
-- ✅ Only file hashes (MD5, SHA1, SHA256) sent to cloud
-- ❌ No file contents, names, or paths
-- ❌ No personal information or telemetry
-- ✅ Offline mode always available
-
----
-
-### 🔄 Auto Update System 🆕
-
-**Safe, User-Controlled Updates**
-
-- Check for tool updates: `hex-avg update`
-- Update signatures: `hex-avg update --rules`
-- GitHub Releases as update source
-- User consent **required** before updates
-- Safe rollback if update fails
-- Offline mode support
-
-**Features:**
-- Version checking
-- Download and verify packages
-- Automatic backup before update
-- Restore on failure
-- User confirmation prompts
-
----
-
-### 🖥️ GUI Frontend 🆕
-
-**Cross-Platform User-Friendly Interface**
-
-- **Protection Control**: Start/Stop real-time protection
-- **Scanning**: Quick scan, Full scan, Custom folder scan
-- **Quarantine Management**: View and manage quarantined files
-- **Logs Viewer**: Monitor all HEX-AVG activity
-- **Status Dashboard**: Real-time protection and scan status
-- **Built with Tkinter**: Works on Windows and Linux
-
-**Launch GUI:**
-```bash
-hex-avg gui
-```
-
----
-
-### 🛡️ Windows Defender Integration 🆕
-
-**Coexistence Philosophy**
-
-HEX-AVG is designed to **work alongside** Windows Defender, not replace it.
-
-**Multi-Layered Security Approach:**
-- **Layer 1**: Windows Defender (Real-time protection, cloud-delivered protection)
-- **Layer 2**: HEX-AVG (Signature, heuristic, ML-based detection)
-
-**What HEX-AVG Does:**
-- ✅ Detects Defender status
-- ✅ Shows friendly coexistence notice
-- ✅ Explains multi-layered security benefits
-- ✅ NEVER disables Defender
-- ✅ Both tools scan independently
-
-**What HEX-AVG Does NOT Do:**
-- ❌ Disable Windows Defender
-- ❌ Modify Defender settings
-- ❌ Interfere with Defender operations
-
-**Benefits of Coexistence:**
-- Complementary detection methods
-- Defense-in-depth strategy
-- Educational insight into different AV engines
-- Reduced chance of detection bypass
-
-**Check Status:**
-```bash
-hex-avg defender
-```
-
----
-
-## 📖 Usage
-
-### Basic Commands
+## Quick start
 
 ```bash
-# Quick scan
-hex-avg scan --quick
+# From repository root
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 
-# Scan specific path
-hex-avg scan /path/to/scan
+# Help / version
+python -m src.main --help
+python -m src.main --version
 
-# Full system scan
-hex-avg scan --full
-
-# Scan with ML scoring (experimental)
-hex-avg scan /path --ml
-
-# Scan with cloud lookup (requires opt-in)
-hex-avg scan /path --cloud
+# Scan a path (dry-run style; educational)
+python -m src.main scan .
+python -m src.main scan /path/to/file
+python -m src.main scan --quick /tmp
 ```
 
-### Update Management
+## Tests
 
 ```bash
-# Check for updates
-hex-avg update
-
-# Update virus signatures
-hex-avg update --rules
+pip install -r requirements-dev.txt
+pytest tests/ -v
 ```
 
-### GUI Usage
+## Packaging (PyInstaller)
 
 ```bash
-# Launch GUI
-hex-avg gui
+pip install -r requirements-dev.txt
+pyinstaller hex_avg.spec --clean --noconfirm
+# Linux: ./dist/hex-avg --version
+# Windows: dist\hex-avg.exe --version
 ```
 
----
+## Project layout
 
-## 📦 Installation
-
-### Windows
-
-```powershell
-# Download from GitHub Releases
-# Extract and run:
-hex-avg.exe scan --quick
+```
+src/
+  main.py          # Official entrypoint (python -m src.main)
+  cli.py           # Click CLI
+  core/            # Scanner, hasher, traversal, threads
+  detection/       # Signature, heuristic, YARA, ML
+  ...
+tests/             # pytest suite
+signatures/        # EICAR + YARA rules
+hex_avg.spec       # Single PyInstaller config
+requirements.txt
+requirements-dev.txt
 ```
 
-### Linux
+## Security notes
 
-```bash
-# Download .deb or AppImage from GitHub Releases
+- Default behaviour is non-destructive (scan / report).
+- Do not disable your real antivirus to "make room" for this tool.
+- Never test with real malware on a production host; use isolated VMs and the EICAR test file only.
+- No hardcoded API keys or secrets are required for local scanning.
 
-# Debian package:
-sudo dpkg -i hex-avg_3.0.0_amd64.deb
-hex-avg scan --quick
+## License
 
-# AppImage:
-chmod +x HEX-AVG-3.0.0-x86_64.AppImage
-./HEX-AVG-3.0.0-x86_64.AppImage scan --quick
-```
+See `LICENSE` if present. If none is present, the repository owner must choose a license before redistribution.
 
----
+## Disclaimer
 
-## 🔐 Security Model &amp; Limitations
-
-### What HEX-AVG CAN Detect
-
-✅ Known malware via signatures
-✅ Unknown malware via heuristics
-✅ Packed/obfuscated files
-✅ Suspicious behaviors
-
-### What HEX-AVG CANNOT Detect
-
-❌ Kernel-level rootkits (user-space only)
-❌ In-memory/fileless malware
-❌ Network attacks
-❌ Advanced persistence mechanisms
-
----
-
-## 📚 Documentation
-
-- [BUILD_SYSTEM.md](BUILD_SYSTEM.md) - Build and release documentation
-- [INSTALLATION.md](INSTALLATION.md) - Detailed installation guide
-- [LEVEL2_ARCHITECTURE.md](LEVEL2_ARCHITECTURE.md) - LEVEL-2 architecture
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) file for details
-
----
-
-**Version: 3.0.0 | Code Name: Phoenix Rising**  
-**Last Updated: 2024**
-
----
-
-Made with ❤️ by the HEX-AVG Team
+HEX-AVG is provided for educational purposes. The authors are not responsible for misuse or for any damage caused by reliance on this tool as a sole security control.

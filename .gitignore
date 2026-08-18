@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Testing / tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# HEX-AVG runtime
+logs/
+quarantine/
+reports/
+signatures/signatures.db
+signatures/signatures_backup.db
+*.db
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Agent / generated
+outputs/
+.agent_hooks/
+summarized_conversations/
+.cache/
